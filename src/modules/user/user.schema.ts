@@ -7,7 +7,7 @@ export const USER_COLLECTION_NAME = 'users';
 
 export const UserSchema = new Schema<IUserDoc>(
   {
-    email: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true, index: true },
     name: { type: String, required: true },
     password: { type: String, required: true },
   },
