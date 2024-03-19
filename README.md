@@ -54,7 +54,7 @@ $ yarn run start:dev
 $ cp .env.example .env.test
 
 # unit tests
-$ yarn  test
+$ yarn test
 
 # e2e tests
 $ yarn test:e2e
