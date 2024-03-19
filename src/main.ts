@@ -8,6 +8,7 @@ import * as hpp from 'hpp';
 
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { swaggerMiddleware } from './shared/swagger';
 
 async function bootstrap() {
   dotenv.config();
@@ -27,6 +28,8 @@ async function bootstrap() {
   app.use(compression());
   app.use(xss());
   app.use(hpp());
+  swaggerMiddleware(app);
+
   await app.listen(port, () => {
     Logger.log(`Server is running on port ${port} `);
   });
