@@ -1,5 +1,6 @@
 import { MongooseModule } from '@nestjs/mongoose';
 import { Schema } from 'mongoose';
+
 import { IUrlAnalyticsDoc, IUrlDoc } from './url.interface';
 import { USER_SCHEMA_NAME } from '../user/user.schema';
 
@@ -12,7 +13,7 @@ export const ANALYTICS_COLLECTION_NAME = 'analytics';
 export const UrlSchema = new Schema<IUrlDoc>(
   {
     originalURL: { type: String, required: true },
-    urlCode: { type: String, required: true, unique: true },
+    urlCode: { type: String, required: true, unique: true, index: true },
     shortURL: { type: String, required: true, unique: true },
     clickCount: { type: Number, required: true, default: 0 },
     lastClickedAt: { type: Date, required: true, default: Date.now() },
@@ -20,6 +21,7 @@ export const UrlSchema = new Schema<IUrlDoc>(
       type: Schema.Types.ObjectId,
       ref: USER_SCHEMA_NAME,
       required: true,
+      index: true,
     },
   },
   {
@@ -27,6 +29,9 @@ export const UrlSchema = new Schema<IUrlDoc>(
     versionKey: false,
   },
 );
+
+UrlSchema.index({ originalURL: 1, user: 1 });
+UrlSchema.index({ createdAt: -1 });
 
 export const UrlSchemaModule = MongooseModule.forFeature([
   {
@@ -38,10 +43,15 @@ export const UrlSchemaModule = MongooseModule.forFeature([
 
 export const AnalyticSchema = new Schema<IUrlAnalyticsDoc>(
   {
-    url: { type: Schema.Types.ObjectId, ref: URL_SCHEMA_NAME, required: true },
+    url: {
+      type: Schema.Types.ObjectId,
+      ref: URL_SCHEMA_NAME,
+      required: true,
+      index: true,
+    },
     referralSource: { type: String, required: false, default: 'direct' },
-    browserType: { type: String, required: false, default: 'uknown' },
-    deviceType: { type: String, required: false, default: 'others' },
+    browserType: { type: String, required: false, default: 'unknown' },
+    deviceType: { type: String, required: false, default: 'other' },
   },
   { timestamps: true, versionKey: false },
 );

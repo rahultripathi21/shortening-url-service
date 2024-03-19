@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 import { USER_SCHEMA_NAME } from './user.schema';
 import { IUserDoc } from './user.interface';
@@ -16,7 +16,7 @@ export class UserRepository {
     return this.userModel.create(userData);
   }
 
-  async finduser(query): Promise<IUserDoc> {
+  async findUser(query): Promise<IUserDoc> {
     return this.userModel.findOne(query);
   }
 }

@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
+
 import { UserRepository } from '../modules/user/user.repository';
 
 @Injectable()
@@ -34,7 +35,7 @@ export class AuthGuard implements CanActivate {
         throw new HttpException('Invalid token', HttpStatus.FORBIDDEN);
       const token = auth.split(' ')[1];
       const decoded: any = jwt.verify(token, process.env.JWT_SECRET_KEY);
-      const userDetails = await this.userRepository.finduser({
+      const userDetails = await this.userRepository.findUser({
         _id: decoded._id,
       });
       if (!userDetails) throw new NotFoundException('User not found');

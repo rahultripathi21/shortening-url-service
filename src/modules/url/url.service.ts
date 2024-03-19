@@ -6,22 +6,25 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import mongoose from 'mongoose';
 
 import { UrlRepository } from './url.repository';
 import { IUrlInputs } from './url.interface';
 import { HelperService } from '../helper/helper.service';
 import { RedisService } from '../helper/redis.service';
-import { urlHashKey } from '../../shared/constants';
-import mongoose from 'mongoose';
 
 @Injectable()
 export class UrlService {
+  private readonly urlHashKey;
+
   constructor(
     private readonly urlRepository: UrlRepository,
     private readonly helperService: HelperService,
     private readonly configService: ConfigService,
     private readonly redisService: RedisService,
-  ) {}
+  ) {
+    this.urlHashKey = this.configService.get<string>('URL_HASH_KEY');
+  }
 
   async shortenUrl(url: string, user) {
     try {
@@ -42,9 +45,8 @@ export class UrlService {
         };
 
         const urlData = await this.urlRepository.addUrlData(urlDataToAdd);
-
         await this.redisService.setDataInRedis(
-          urlHashKey,
+          this.urlHashKey,
           urlCode,
           JSON.stringify({
             urlId: urlData._id.toString(),
@@ -74,7 +76,7 @@ export class UrlService {
       let redirectUrl, urlId;
 
       const redisUrlData = JSON.parse(
-        await this.redisService.getDataFromRedis(urlHashKey, urlCode),
+        await this.redisService.getDataFromRedis(this.urlHashKey, urlCode),
       );
 
       if (redisUrlData) {
@@ -88,7 +90,7 @@ export class UrlService {
 
         urlId = urlExist._id;
         await this.redisService.setDataInRedis(
-          urlHashKey,
+          this.urlHashKey,
           urlCode,
           JSON.stringify({
             urlId: urlExist._id.toString(),
@@ -186,7 +188,7 @@ export class UrlService {
     const urlIds = urlsToDelete.map((url) => url._id);
 
     const redisDeletePromises = urlsToDelete.map((url) =>
-      this.redisService.deleteDataFromRedis(urlHashKey, url.urlCode),
+      this.redisService.deleteDataFromRedis(this.urlHashKey, url.urlCode),
     );
     const analyticsDeleteQuery = { url: { $in: urlIds } };
     await Promise.all([

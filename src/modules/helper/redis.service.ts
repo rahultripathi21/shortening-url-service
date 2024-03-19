@@ -5,7 +5,6 @@ import { createClient } from 'redis';
 @Injectable()
 export class RedisService {
   private rClient: any;
-  private expirationTime: any;
 
   constructor(private readonly configService: ConfigService) {
     const url = this.configService.get<string>('REDIS_URL');

@@ -1,18 +1,17 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UserModule } from './modules/user/user.module';
-import { UrlModule } from './modules/url/url.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { SchedulerModule } from './modules/scheduler/scheduler.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+import { UserModule } from './modules/user/user.module';
+import { UrlModule } from './modules/url/url.module';
+import { SchedulerModule } from './modules/scheduler/scheduler.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: `.env.${process.env.NODE_ENV}`,
       isGlobal: true,
       cache: true,
     }),
@@ -37,13 +36,12 @@ import { APP_GUARD } from '@nestjs/core';
     UrlModule,
     SchedulerModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
-    AppService,
   ],
 })
 export class AppModule {}
