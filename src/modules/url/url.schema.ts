@@ -1,5 +1,6 @@
 import { MongooseModule } from '@nestjs/mongoose';
 import { Schema } from 'mongoose';
+
 import { IUrlAnalyticsDoc, IUrlDoc } from './url.interface';
 import { USER_SCHEMA_NAME } from '../user/user.schema';
 
@@ -40,8 +41,8 @@ export const AnalyticSchema = new Schema<IUrlAnalyticsDoc>(
   {
     url: { type: Schema.Types.ObjectId, ref: URL_SCHEMA_NAME, required: true },
     referralSource: { type: String, required: false, default: 'direct' },
-    browserType: { type: String, required: false, default: 'uknown' },
-    deviceType: { type: String, required: false, default: 'others' },
+    browserType: { type: String, required: false, default: 'unknown' },
+    deviceType: { type: String, required: false, default: 'other' },
   },
   { timestamps: true, versionKey: false },
 );

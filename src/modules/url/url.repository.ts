@@ -121,43 +121,38 @@ export class UrlRepository {
   }
 
   async getPeakHoursForUrl(urlId) {
-    try {
-      const peakHourData = await this.analyticModel.aggregate([
-        { $match: { url: new mongoose.Types.ObjectId(urlId) } },
-        {
-          $group: {
-            _id: {
-              hour: { $hour: { $toDate: '$createdAt' } },
-              date: {
-                $dateToString: {
-                  format: '%Y-%m-%d',
-                  date: { $toDate: '$createdAt' },
-                },
+    const peakHourData = await this.analyticModel.aggregate([
+      { $match: { url: new mongoose.Types.ObjectId(urlId) } },
+      {
+        $group: {
+          _id: {
+            hour: { $hour: { $toDate: '$createdAt' } },
+            date: {
+              $dateToString: {
+                format: '%Y-%m-%d',
+                date: { $toDate: '$createdAt' },
               },
             },
-            hitCount: { $sum: 1 },
           },
+          hitCount: { $sum: 1 },
         },
-        { $sort: { hitCount: -1 } },
-      ]);
+      },
+      { $sort: { hitCount: -1 } },
+    ]);
 
-      const peakHoursByDate = {};
-      peakHourData.forEach((entry) => {
-        const { hour, date } = entry._id;
-        const ampmHour =
-          hour < 12 ? `${hour} AM` : `${hour === 12 ? 12 : hour - 12} PM`;
-        if (
-          !peakHoursByDate[date] ||
-          peakHoursByDate[date].hitCount < entry.hitCount
-        ) {
-          peakHoursByDate[date] = { hour: ampmHour, hitCount: entry.hitCount };
-        }
-      });
+    const peakHoursByDate = {};
+    peakHourData.forEach((entry) => {
+      const { hour, date } = entry._id;
+      const ampmHour =
+        hour < 12 ? `${hour} AM` : `${hour === 12 ? 12 : hour - 12} PM`;
+      if (
+        !peakHoursByDate[date] ||
+        peakHoursByDate[date].hitCount < entry.hitCount
+      ) {
+        peakHoursByDate[date] = { hour: ampmHour, hitCount: entry.hitCount };
+      }
+    });
 
-      return peakHoursByDate;
-    } catch (error) {
-      console.error('Error fetching peak hour data:', error);
-      throw error;
-    }
+    return peakHoursByDate;
   }
 }

@@ -9,6 +9,6 @@ import { HelperModule } from '../helper/helper.module';
   imports: [UserSchemaModule, HelperModule],
   controllers: [UserController],
   providers: [UserService, UserRepository],
-  exports: [UserService, UserRepository],
+  exports: [UserService, UserRepository, UserSchemaModule],
 })
 export class UserModule {}

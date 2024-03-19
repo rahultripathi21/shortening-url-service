@@ -20,7 +20,7 @@ export class UserService {
 
   async signUp({ email, name, password }: SignUpDTO) {
     try {
-      const userExist = await this.userRepository.finduser({ email });
+      const userExist = await this.userRepository.findUser({ email });
       if (userExist) throw new ConflictException('User email already exists');
 
       const hash = await this.helperService.encodePassword(password);
@@ -43,7 +43,7 @@ export class UserService {
 
   async signIn({ email, password }: SignInDTO) {
     try {
-      const userExist = await this.userRepository.finduser({ email });
+      const userExist = await this.userRepository.findUser({ email });
       if (!userExist) {
         throw new NotFoundException('User does not exist');
       }
@@ -54,13 +54,16 @@ export class UserService {
         throw new BadRequestException('Password is incorrect');
       }
 
-      const token = this.helperService.createJwtToken({
+      const token = await this.helperService.createJwtToken({
         _id: userExist._id.toString(),
         email: userExist.email,
         name: userExist.name,
       });
 
-      return { message: 'Successfully signed in', token };
+      return {
+        message: 'Successfully signed in',
+        token,
+      };
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
