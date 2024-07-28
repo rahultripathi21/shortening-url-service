@@ -28,7 +28,7 @@ To maintain database and cache efficiency, the service implements a weekly cron 
 - **Rate Limiting**: Implemented using ThrottlerModule to mitigate the risk of abuse or denial-of-service attacks by limiting the number of requests a client can make within a certain time period, thus safeguarding the service from excessive load and potential security threats.
 - **Middleware Protection**: Utilizes middleware such as compression, xss, and hpp to defend against common security threats like Cross-Site Scripting (XSS) attacks and HTTP Parameter Pollution (HPP), ensuring the integrity and security of incoming requests.
 
-## Installation  .
+## Installation   .
 
 ```bash
 #Clone the Repository
