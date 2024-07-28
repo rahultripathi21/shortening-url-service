@@ -1,0 +1,30 @@
+# Node modules and other dependencies
+node_modules
+dist
+tmp
+.cache
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.test
+.env.production
+
+# Docker files
+Dockerfile
+docker-compose.yml
+
+# Test coverage reports
+coverage
+
+# Miscellaneous
+.DS_Store
+*.pem
+*.md
+*.swp

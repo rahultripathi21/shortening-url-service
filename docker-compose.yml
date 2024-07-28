@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo
+    container_name: url-shortener-mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+  
+  redis:
+    image: redis
+    container_name: url-shortener-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  url-shortner:
+    image: url-shortner
+    build:
+      context: .
+    container_name: url-shortner-app
+    depends_on:
+      - mongodb
+      - redis
+    ports:
+      - "3000:3000"
+
+volumes:
+  mongodb_data:
+  redis_data:
