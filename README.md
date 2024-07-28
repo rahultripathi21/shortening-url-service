@@ -35,6 +35,10 @@ To maintain database and cache efficiency, the service implements a weekly cron 
 $ git clone https://github.com/rahultripathi21/shortening-url-service.git
 $ cd shortening-url-service
 
+#to run code using docker
+$ docker-compose up -d mongodb redis && docker-compose up url-shortner
+
+#OR ELSE
 #Install Dependencies
 $ yarn install
 
