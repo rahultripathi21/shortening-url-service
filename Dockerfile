@@ -5,7 +5,7 @@ FROM node:20
 WORKDIR /src
 
 # Copy package.json and yarn.lock first to leverage caching
-COPY package.json yarn.lock ./
+COPY package.json ./
 
 # Install dependencies
 RUN yarn install
