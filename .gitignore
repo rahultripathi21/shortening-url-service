@@ -36,5 +36,4 @@ yarn.lock
 !.vscode/extensions.json
 /.vscode/*
 
-.env
 .env.test
